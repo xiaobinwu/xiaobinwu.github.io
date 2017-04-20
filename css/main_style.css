@@ -862,6 +862,12 @@ body {
 .page-footer .top .social li a:hover {
   color: #2980b9;
 }
+.page-footer .top .site {
+  font-size: .8rem;
+  text-align: center;
+  color: #7f8c8d;
+  margin-top: 15px;
+}
 .page-footer .bottom {
   background: #34495e;
   padding: 30px 15px;
