@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"><meta name="format-detection" content="telephone=no"><meta name="format-detection" content="email=no"><meta name="description" content="24k-小清新个人技术博客"><meta name="keywords" content="Hexo, GulpJs, Nodejs, Reactjs, Vuejs, Javascript, 前端"><title>Vue2.0 全家桶开发的网页应用（参照吾记APP) - 前端穷屌丝，爱码人士</title><link rel="stylesheet" href="/css/main_style.min.css"><link rel="icon" href="/favicon.ico"></head><body><input id="navi" type="checkbox"><ul class="main-navication"><li><a href="/"><span>Home</span></a></li><li><a href="https://github.com/xiaobinwu"><span>Github</span></a></li><li><a href="http://www.cnblogs.com/wuxiaobin/"><span>博客园</span></a></li></ul><div class="wrapper" id="wrap"><div class="post-header"><label class="navi-button light" for="navi">MENU</label><img class="background" src="http://callfiles.ueibo.com/hexo-theme-laughing/post_background.jpg"><div class="post-title"><h1 class="title">Vue2.0 全家桶开发的网页应用（参照吾记APP)</h1><ul class="meta"><li><i class="icon icon-author"></i>24k-小清新</li><li><i class="icon icon-clock"></i>7 Minutes</li><li><i class="icon icon-calendar"></i>2017年4月21日</li></ul></div></div><div class="article-content" style="max-width:800px"><p><img src="https://sfault-image.b0.upaiyun.com/421/917/4219175942-58f9a9a29ba1b_articlex" alt="图片描述"></p>
+<p>##<a href="https://github.com/xiaobinwu/Wuji" target="_blank" rel="external">github链接</a></p>
+<p>借鉴吾记APP，使用 vue2.0+vue-router+vuex 为主要技术栈，elementui做为ui框架，多模块 spa 模式，webpack2.0 负责模块打包，gulp 负责处理静态资源打包、压缩，欢迎打赏star！！！</p>
+<p>##安利一下<br><img src="https://sfault-image.b0.upaiyun.com/271/509/2715098927-58f9ab6f3126e_articlex" alt="图片描述"></p>
+<h2 id="吾记前端构建流程"><a href="#吾记前端构建流程" class="headerlink" title="吾记前端构建流程"></a>吾记前端构建流程</h2><h4 id="本地环境准备"><a href="#本地环境准备" class="headerlink" title="本地环境准备"></a>本地环境准备</h4><ul>
+<li>安装node： * <a href="https://nodejs.org/en/download/" target="_blank" rel="external">https://nodejs.org/en/download/</a> （”node”: “&gt;=6.0”，对应需要升级node-sass，不然使用不了！）</li>
+<li>配置webpack： npm install -g webpack(sudo权限)</li>
+<li>windows配置cnpm：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">npm install -g cnpm --registry=https://registry.npm.taobao.org</div><div class="line">因为npm的默认仓库在国外，下载很慢，国内淘宝搞了个CNPM，每10分钟同步一次，完全够用了</div></pre></td></tr></table></figure>
+<h3 id="依赖包安装"><a href="#依赖包安装" class="headerlink" title="依赖包安装"></a>依赖包安装</h3><ul>
+<li>进入wuji目录</li>
+<li>执行cnpm install</li>
+</ul>
+<h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><ul>
+<li>开发环境：执行 node server.js（或 npm run serve）</li>
+<li>热加载 node server.js hot-reload（或 npm run hot）</li>
+<li>mock数据 npm run mock</li>
+<li>生产环境：执行 npm run build</li>
+</ul>
+<h2 id="关于source-Mapping（仅支持chrome-浏览器）"><a href="#关于source-Mapping（仅支持chrome-浏览器）" class="headerlink" title="关于source Mapping（仅支持chrome 浏览器）"></a>关于source Mapping（仅支持chrome 浏览器）</h2><ul>
+<li>source Mapping就是一个代码映射跟踪，方便本地开发时debug压缩文件</li>
+<li>确保chrome已打开<a href="https://developer.chrome.com/devtools/docs/settings#enable-js source maps" target="_blank" rel="external">source Mapping</a> (默认是打开的)</li>
+<li>打开Develop Tools -》 Sources 即可看到源文件</li>
+</ul>
+<h2 id="hot-reload（支持构建的实时刷新）"><a href="#hot-reload（支持构建的实时刷新）" class="headerlink" title="hot reload（支持构建的实时刷新）"></a>hot reload（支持构建的实时刷新）</h2><ul>
+<li>环境准备：</li>
+<li>cnpm install express webpack-dev-middleware webpack-hot-middleware</li>
+<li>执行node server.js hot-reload（或 npm run hot）</li>
+<li>静态资源访问eg：<a href="http://localhost:8088/Static/dist/js/jobDetail.js" target="_blank" rel="external">http://localhost:8088/Static/dist/js/jobDetail.js</a></li>
+</ul>
+<h2 id="自定义主题"><a href="#自定义主题" class="headerlink" title="自定义主题"></a>自定义主题</h2><ul>
+<li>进入wuji目录</li>
+<li>cnpm install element-theme element-theme-default –save-dev （依赖包安装时已安装）</li>
+<li>执行node_modules/.bin/et -i</li>
+<li>生成element-variables.css</li>
+<li>执行node_modules/.bin/et</li>
+<li>则会创建./theme</li>
+<li>更改主题时，对应.babelrc的修改会如下：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  <span class="string">"plugins"</span>: [[<span class="string">"component"</span>, [</div><div class="line">    &#123;</div><div class="line">      <span class="string">"libraryName"</span>: <span class="string">"element-ui"</span>,</div><div class="line">      <span class="string">"styleLibraryName"</span>: <span class="string">"~theme"</span></div><div class="line">    &#125;</div><div class="line">  ]]]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="autoprefixer（样式前缀兼容性处理），在vue-loader-option进行配置"><a href="#autoprefixer（样式前缀兼容性处理），在vue-loader-option进行配置" class="headerlink" title="autoprefixer（样式前缀兼容性处理），在vue-loader option进行配置"></a>autoprefixer（样式前缀兼容性处理），在vue-loader option进行配置</h2><ul>
+<li>生成规则：</li>
+<li>自动加上浏览器样式前缀，兼容各浏览器（针对份额大于全球统计数据的1%，firefox 15）</li>
+</ul>
+<h2 id="静态资源gulp处理（-public）"><a href="#静态资源gulp处理（-public）" class="headerlink" title="静态资源gulp处理（/public）"></a>静态资源gulp处理（/public）</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> gulp = <span class="built_in">require</span>(<span class="string">'gulp'</span>),</div><div class="line">    uglify = <span class="built_in">require</span>(<span class="string">'gulp-uglify'</span>), <span class="comment">//压缩js</span></div><div class="line">    rename = <span class="built_in">require</span>(<span class="string">"gulp-rename"</span>), <span class="comment">//文件重命名</span></div><div class="line">    changed = <span class="built_in">require</span>(<span class="string">'gulp-changed'</span>), <span class="comment">//监听文件是否修改</span></div><div class="line">    imagemin = <span class="built_in">require</span>(<span class="string">'gulp-imagemin'</span>), <span class="comment">// 图片压缩</span></div><div class="line">    pngquant = <span class="built_in">require</span>(<span class="string">'imagemin-pngquant'</span>), <span class="comment">// 深度压缩</span></div><div class="line">    runSequence = <span class="built_in">require</span>(<span class="string">'run-sequence'</span>),     <span class="comment">// 同步运行任务插件</span></div><div class="line">    del = <span class="built_in">require</span>(<span class="string">'del'</span>), <span class="comment">//删除文件</span></div><div class="line">    spritesmith = <span class="built_in">require</span>(<span class="string">'gulp.spritesmith'</span>), <span class="comment">//合成雪碧图</span></div><div class="line">    find = <span class="built_in">require</span>(<span class="string">"gulp-find-glob"</span>); <span class="comment">//得到glob对象</span></div></pre></td></tr></table></figure>
+<ul>
+<li>进入wuji/assets/public目录</li>
+<li>cnpm install</li>
+<li>执行 gulp（压缩js、图片）</li>
+<li>执行 gulp sprite（生成雪碧图）[将需要合成雪碧的图片放入images/sprite/中某个新建的文件夹，运行，则可以在该文件夹下看到对应sprite.png、sprite.scss]</li>
+</ul>
+<h2 id="前端页面"><a href="#前端页面" class="headerlink" title="前端页面"></a>前端页面</h2><blockquote>
+<p>index.html  =&gt;  我的日记列表<br>passing.html  =&gt;  过客列表<br>account.html =&gt; 登录注册页面</p>
+</blockquote>
+</div><div class="article-meta" style="max-width:800px"><div class="tags"><i class="icon icon-tag"></i><ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/gulp-webpack-vuex-vue-router-vue-js/">gulp  webpack  vuex  vue-router  vue.js</a><span class="tag-list-count">1</span></li></ul></div><div class="categories"><i class="icon icon-category"></i><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/js/">js</a><span class="category-list-count">4</span></li></ul></div></div><div class="article-comment" style="max-width:800px"><div class="ds-thread" id="ds-thread" data-thread-key="cj6x9224d0000jwp2yaqqc85a" data-title="Vue2.0 全家桶开发的网页应用（参照吾记APP)" data-url="http://yoursite.com/2017/04/21/Wuji/" site-name="ueibo"></div><script>var siteName = document.getElementById('ds-thread').getAttribute('site-name');
+var duoshuoQuery = {short_name: siteName};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();</script></div><ul class="navication"><li class="home"><a href="/"><i class="icon icon-home"></i></a></li><li><a href="/2017/03/25/calendar/"><i class="icon icon-arror-left"></i></a></li><li><a href="/2017/06/08/my-vue-scaffold/"><i class="icon icon-arror-right"></i></a></li></ul><div class="page-footer"><div class="top"><ul class="social"><li><a href="https://github.com/xiaobinwu" title="Github" target="_blank"><i class="icon icon-github"></i></a></li><li><a href="http://weibo.com/u/2379094031" title="Weibo" target="_blank"><i class="icon icon-weibo"></i></a></li><li><a href="Mailto:739288994@qq.com" title="Email" target="_blank"><i class="icon icon-email"></i></a></li></ul><div class="site"><span>本站总访问量</span><span id="busuanzi_value_site_pv"></span><span>次，访客数</span><span id="busuanzi_value_site_uv"></span><span>人次</span></div></div><div class="bottom"><p class="copyright">© 2017 前端穷屌丝，爱码人士<br><small>POWER BY <a href="https://hexo.io" target="_blank">HEXO</a></small></p></div></div><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script>var wrap = document.getElementById('wrap');
+window.onload = function () {
+  wrap.className += ' done';
+}</script></body></html>
