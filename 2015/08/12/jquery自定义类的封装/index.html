@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"><meta name="format-detection" content="telephone=no"><meta name="format-detection" content="email=no"><meta name="description" content="24k-小清新个人技术博客"><meta name="keywords" content="Hexo, GulpJs, Nodejs, Reactjs, Vuejs, Javascript, 前端"><title>jquery自定义类的封装 - 前端穷屌丝，爱码人士</title><link rel="stylesheet" href="/css/main_style.min.css"><link rel="icon" href="/favicon.ico"></head><body><input id="navi" type="checkbox"><ul class="main-navication"><li><a href="/"><span>Home</span></a></li><li><a href="https://github.com/xiaobinwu"><span>Github</span></a></li><li><a href="http://www.cnblogs.com/wuxiaobin/"><span>博客园</span></a></li><li><a href="/atom.xml"><span>RSS</span></a></li></ul><div class="wrapper" id="wrap"><div class="post-header"><label class="navi-button light" for="navi">MENU</label><img class="background" src="http://callfiles.ueibo.com/hexo-theme-laughing/post_background.jpg"><div class="post-title"><h1 class="title">jquery自定义类的封装</h1><ul class="meta"><li><i class="icon icon-author"></i>24k-小清新</li><li><i class="icon icon-clock"></i>3 Minutes</li><li><i class="icon icon-calendar"></i>2015年8月12日</li></ul></div></div><div class="article-content" style="max-width:800px"><p>如何用jquery自定义一个类？（demo参考）</p>
+<p>/<em>简单使用</em>/</p>
+<div class="cnblogs_Highlighter"><br><pre class="brush:csharp;gutter:true;">(function($){<br><br>　//el操纵对象，option属性值<br><br>　 $.love = function(el,option){<br><br>　　　　var lo = $(el);<br><br>　　　　var lo.vars =  $.extend({},$.love.default ,option); //合并成新对象，则是新的属性列表<br><br>　　　　//定义其他属性<br><br>　　　　　　……<br><br>　　　　　　var method = {};<br><br>　　　　//私有方法,私有方法之间可互相调用<br><br>　　　　method={<br><br>　　　　　　functionA: function() {…},<br><br>　　　　　　functionB: function() {…},<br><br>　　　　　　functionC: function() {…},<br><br>　　　　　　…<br><br>　　　　}<br><br>　　　　//公有方法（特权方法），供类外调用<br><br>　　　　this.publicFunction = function(a,b,c){<br><br>　　　　　　….<br><br>　　　　　　/<em>调用私有函数</em>/<br><br>　　　　　　method.functionA();<br><br>　　　　　　…<br><br>　　　　}<br><br>　　　　…<br><br>　}<br><br>　//可设置默认属性<br><br>　$.love.default = {<br><br>　　option1:…,<br><br>　　option2:…,<br><br>　　….<br><br>　　}<br><br>})(jQuery);<br></pre><br></div>
+
+<p>&nbsp;</p>
+<p>&nbsp;/<em>类外调用</em>/</p>
+<p>　　var a = new $.love(“#id”,{title:”name”,age:12,…});</p>
+<p>　　a.publicFunction(a,b,c);</p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter"><br><pre class="brush:csharp;gutter:true;">/<em>相对高级点</em>/<br><br>(function($){<br><br>　//el操纵对象，option属性值<br><br>　 $.love = function(el,option){<br><br>　　　　var lo = $(el);<br><br>　　　　var lo.vars =  $.extend({},$.love.default ,option); //合并成新对象，则是新的属性列表<br><br>　　　　//定义其他属性<br><br>　　　　　　……<br><br>　　　　　　var method = {};<br><br>　　　　$.data(el, “love”, lo); //在元素上存放数据，包括lo的所有属性，方法<br><br>　　　　//私有方法,私有方法之间可互相调用<br><br>　　　　method={<br><br>　　　　　　functionA: function() {…},<br><br>　　　　　　functionB: function() {…},<br><br>　　　　　　functionC: function() {…},<br><br>　　　　　　…<br><br>　　　　}<br><br>　　　　//公有方法（特权方法），供类外调用<br><br> 　　　　lo.pfunctionA = function(){<br><br>　　　　　　/<em>调用私有函数</em>/<br><br>　　　　　　method.functionA();<br><br>　　　　},<br><br>　　　　 lo.pfunctionB = function(){…},<br><br>　　　　…<br><br>　}<br><br>　//可设置默认属性<br><br>　$.love.default = {<br><br>　　option1:…,<br><br>　　option2:…,<br><br>　　….<br><br>　　}<br><br>　　$.fn.love(option){<br><br>　　　　var $this = $(this);<br><br>　　　　if( $this.data(‘love’)===undefined){<br><br>　　　　　new $.love(this,option);<br><br>　　　　}else{<br><br>　　　　　 var love = $this.data(‘love’); //直接使用类中的函数等<br><br>　　　　　 love.pfunctionA();<br><br>　　　　}<br><br>　　}<br><br>})(jQuery);<br></pre><br></div>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a href="http://t.cn/RUbL4rP" target="_blank" rel="external">&nbsp;http://t.cn/RUbL4rP</a></p>
+<p>$ ==&gt; “$ “就是 jQuery 对象的引用，等于”jQuery&nbsp;”</p>
+<p>(function(){<span style="line-height: 1.5;">}) ==&gt;模仿块级作用域</span></p>
+<p><span style="line-height: 1.5;">$.xxx ==&gt;针对&nbsp;jQuery 对象添加方法（我的理解）</span></p>
+<p><span style="line-height: 1.5;">$.fn.xxx ==》针对元素添加方法（我的理解）</span></p>
+</div><div class="article-meta" style="max-width:800px"></div><div class="article-comment" style="max-width:800px"><div class="ds-thread" id="ds-thread" data-thread-key="cj7ju58o9000634p2w23e7led" data-title="jquery自定义类的封装" data-url="http://yoursite.com/2015/08/12/jquery自定义类的封装/" site-name="ueibo"></div><script>var siteName = document.getElementById('ds-thread').getAttribute('site-name');
+var duoshuoQuery = {short_name: siteName};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();</script></div><ul class="navication"><li class="home"><a href="/"><i class="icon icon-home"></i></a></li><li><a href="/2015/08/05/怎么样才是设计功能函数的好思路（javascript）？/"><i class="icon icon-arror-left"></i></a></li><li><a href="/2015/09/15/基于thinkphp的后台管理系统模板快速搭建/"><i class="icon icon-arror-right"></i></a></li></ul><div class="page-footer"><div class="top"><ul class="social"><li><a href="https://github.com/xiaobinwu" title="Github" target="_blank"><i class="icon icon-github"></i></a></li><li><a href="http://weibo.com/u/2379094031" title="Weibo" target="_blank"><i class="icon icon-weibo"></i></a></li><li><a href="Mailto:739288994@qq.com" title="Email" target="_blank"><i class="icon icon-email"></i></a></li></ul><div class="site"><span>本站总访问量</span><span id="busuanzi_value_site_pv"></span><span>次，访客数</span><span id="busuanzi_value_site_uv"></span><span>人次</span></div></div><div class="bottom"><p class="copyright">© 2017 前端穷屌丝，爱码人士<br><small>POWER BY <a href="https://hexo.io" target="_blank">HEXO</a></small></p></div></div><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script>var wrap = document.getElementById('wrap');
+window.onload = function () {
+  wrap.className += ' done';
+}</script></body></html>

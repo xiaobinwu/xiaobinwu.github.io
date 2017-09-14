@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"><meta name="format-detection" content="telephone=no"><meta name="format-detection" content="email=no"><meta name="description" content="24k-小清新个人技术博客"><meta name="keywords" content="Hexo, GulpJs, Nodejs, Reactjs, Vuejs, Javascript, 前端"><title>frameset，iframe框架之间如何互相调用变量、函数 - 前端穷屌丝，爱码人士</title><link rel="stylesheet" href="/css/main_style.min.css"><link rel="icon" href="/favicon.ico"></head><body><input id="navi" type="checkbox"><ul class="main-navication"><li><a href="/"><span>Home</span></a></li><li><a href="https://github.com/xiaobinwu"><span>Github</span></a></li><li><a href="http://www.cnblogs.com/wuxiaobin/"><span>博客园</span></a></li><li><a href="/atom.xml"><span>RSS</span></a></li></ul><div class="wrapper" id="wrap"><div class="post-header"><label class="navi-button light" for="navi">MENU</label><img class="background" src="http://callfiles.ueibo.com/hexo-theme-laughing/post_background.jpg"><div class="post-title"><h1 class="title">frameset，iframe框架之间如何互相调用变量、函数</h1><ul class="meta"><li><i class="icon icon-author"></i>24k-小清新</li><li><i class="icon icon-clock"></i>2 Minutes</li><li><i class="icon icon-calendar"></i>2015年9月16日</li></ul></div></div><div class="article-content" style="max-width:800px"><p>以往一直在编写的都是前台的UI，很少使用到frameset、iframe，对其了解也是十分有限，只是知道其可以为其当前页面引入html文件成为当前页的一部分，但是这两天在做后台UI界面的时候，发现这样的框架也是有相当多知识点在里面的。那框架是啥？可以这样说：通过使用框架，你可以在同一个浏览器窗口中显示不止一个页面。每份HTML文档称为一个框架，并且每个框架都独立于其他的框架。那么关于框架，有几个方面是需要我了解的：</p>
+<p><strong>（1）获得html页面上的frame</strong></p>
+<p>　　window.frames可以获得本页面上所有frame集合，用法与document.forms,document.imgs的用法相似，这是这里用的是window对象，获取某个框架可以这样做window.frames[0]、window.frames[‘frameName’]、frames[‘frameName’]、frames[0]、self.frames[0]，此处self与window等价，相当于本页面的window对象。</p>
+<p>这里也还要再看两个属性,contentWindow、contentDocument两个属性，也是可以用来获取子窗口，框架的window对象的。</p>
+<p>contentWindow 兼容各个浏览器，可取得子窗口的 window 对象。</p>
+<p>contentDocument Firefox 支持，&gt; ie8 的ie支持。可取得子窗口的 document 对象。</p>
+<p>假如我要刷新本页面中第一个框架的页面，可以怎么做：</p>
+<div class="cnblogs_code"><br><pre>window.frames[0].contentWindow.location.reload();</pre><br></div>
+
+<p><strong>（2）父框架调用子框架的变量或函数</strong></p>
+<p>结合上面说的获得页面上的frame，那么调用子框架的变量或是函数可以这样来：</p>
+<div class="cnblogs_code"><br><pre>frames[0<span style="color: #000000;">].a;<br>frames[</span>0].refresh();<br>alert(frames[0].location.href);</pre><br></div>
+
+<p>这是调用第一个框架里面的a变量和refresh函数。</p>
+<p><strong>（3）子框架调用父框架的变量或函数</strong></p>
+<p>对于子框架调用父框架的这种情况下，window有个属性叫parent，用来调用上层框架的，所以可以这样来：</p>
+<div class="cnblogs_code"><br><pre><span style="color: #000000;">window.parent.a;<br>window.parent.refresh();</span></pre><br></div>
+
+<p>这是调用子框架调用父框架的a变量和refresh函数。</p>
+<p><strong>（4）兄弟框架之间的调用</strong></p>
+<p>&nbsp;可以通过它们的父框架来相互调用，可以这样做</p>
+<div class="cnblogs_code"><br><pre>self.parent.frames[‘child1’<span style="color: #000000;">];<br>self.parent.frames[</span>‘child2’];</pre><br></div>
+
+<p><strong>（5）多层框架的调用</strong></p>
+<div class="cnblogs_code"><br><pre>window.frames[0].frames[2<span style="color: #000000;">];<br>window.frames[</span>‘child_1’].frames[‘sub_child_3’];</pre><br></div>
+
+<p><strong>（6）顶层框架</strong></p>
+<p>首先需要判断是否为顶层框架，也就是根，可以这样来做：</p>
+<div class="cnblogs_code"><br><pre><span style="color: #0000ff;">if</span>(self==<span style="color: #000000;">window.top){<br>        </span><span style="color: #008000;">//</span><span style="color: #008000;">….</span><br><span style="color: #000000;">}<br></span><span style="color: #008000;">/<em></em></span><span style="color: #008000;">window的另外一个属性top，它表示对顶层框架的引用，这可以用来判断一个框架自身是否为顶层框架</span><span style="color: #008000;">/</span></pre><br></div>
+
+<p>基本关于frameset和iframe之间的互相调用知识点就这些，这个嘛，忽略，<a href="http://t.cn/RUbL4rP" target="_blank" rel="external">http://t.cn/RUbL4rP</a>！</p>
+</div><div class="article-meta" style="max-width:800px"></div><div class="article-comment" style="max-width:800px"><div class="ds-thread" id="ds-thread" data-thread-key="cj7ju58od000834p2k7nn67fc" data-title="frameset，iframe框架之间如何互相调用变量、函数" data-url="http://yoursite.com/2015/09/16/frameset，iframe框架之间如何互相调用变量、函数/" site-name="ueibo"></div><script>var siteName = document.getElementById('ds-thread').getAttribute('site-name');
+var duoshuoQuery = {short_name: siteName};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();</script></div><ul class="navication"><li class="home"><a href="/"><i class="icon icon-home"></i></a></li><li><a href="/2015/09/15/基于thinkphp的后台管理系统模板快速搭建/"><i class="icon icon-arror-left"></i></a></li><li><a href="/2015/10/06/使用git管理github上的项目/"><i class="icon icon-arror-right"></i></a></li></ul><div class="page-footer"><div class="top"><ul class="social"><li><a href="https://github.com/xiaobinwu" title="Github" target="_blank"><i class="icon icon-github"></i></a></li><li><a href="http://weibo.com/u/2379094031" title="Weibo" target="_blank"><i class="icon icon-weibo"></i></a></li><li><a href="Mailto:739288994@qq.com" title="Email" target="_blank"><i class="icon icon-email"></i></a></li></ul><div class="site"><span>本站总访问量</span><span id="busuanzi_value_site_pv"></span><span>次，访客数</span><span id="busuanzi_value_site_uv"></span><span>人次</span></div></div><div class="bottom"><p class="copyright">© 2017 前端穷屌丝，爱码人士<br><small>POWER BY <a href="https://hexo.io" target="_blank">HEXO</a></small></p></div></div><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script>var wrap = document.getElementById('wrap');
+window.onload = function () {
+  wrap.className += ' done';
+}</script></body></html>

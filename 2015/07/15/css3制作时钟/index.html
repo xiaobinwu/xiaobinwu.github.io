@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"><meta name="format-detection" content="telephone=no"><meta name="format-detection" content="email=no"><meta name="description" content="24k-小清新个人技术博客"><meta name="keywords" content="Hexo, GulpJs, Nodejs, Reactjs, Vuejs, Javascript, 前端"><title>css3制作时钟 - 前端穷屌丝，爱码人士</title><link rel="stylesheet" href="/css/main_style.min.css"><link rel="icon" href="/favicon.ico"></head><body><input id="navi" type="checkbox"><ul class="main-navication"><li><a href="/"><span>Home</span></a></li><li><a href="https://github.com/xiaobinwu"><span>Github</span></a></li><li><a href="http://www.cnblogs.com/wuxiaobin/"><span>博客园</span></a></li><li><a href="/atom.xml"><span>RSS</span></a></li></ul><div class="wrapper" id="wrap"><div class="post-header"><label class="navi-button light" for="navi">MENU</label><img class="background" src="http://callfiles.ueibo.com/hexo-theme-laughing/post_background.jpg"><div class="post-title"><h1 class="title">css3制作时钟</h1><ul class="meta"><li><i class="icon icon-author"></i>24k-小清新</li><li><i class="icon icon-clock"></i>7 Minutes</li><li><i class="icon icon-calendar"></i>2015年7月15日</li></ul></div></div><div class="article-content" style="max-width:800px"><p>制作时钟之前需要了解几点知识：</p>
+<p>一、圆上点坐标的计算</p>
+<p><img src="http://images0.cnblogs.com/blog2015/720690/201507/141133127356077.png" alt=""></p>
+<p>二、时钟上时针、分针、秒针的换算</p>
+<p>我们观察一下时钟，首先想到的是与<strong>角度</strong>有关。再有是，秒针，分针，时针之间的<strong>进位</strong>关系。</p>
+<p>　　比如说h时m分s秒，时针、分针、秒针此时此刻的角度：（-<span class="hljs-number">90，是因为rotateZ角度旋转规则，默认是从水平开始，逆时针为+，顺时针为-）</span></p>
+<p>　　ds &nbsp;= &nbsp;s*6-90;</p>
+<p>　　dm = &nbsp;m<em>6+(s/60</em>6)-90;</p>
+<p>　　dh &nbsp;= &nbsp;h<em>30+(m/60</em>30)-90;&nbsp;</p>
+<ol>
+<li>我们都知道<code>1s = 1 / 60min</code>,<code>1min = 1 / 60h</code>;</li>
+<li>观察任意一款手表或时钟，我们会发现，通常时钟的表盘会被分成<span style="background-color: #ff0000;">12</span>个大格，<code>5*12=&lt;span style=&quot;background-color: #ff0000;&quot;&gt;60&lt;/span&gt;</code>个小格，而整个表盘是<code>360&amp;deg;</code>，也就是说每个小格是<span style="background-color: #ff0000;"><code>6&amp;deg;</code></span>。换句话说，秒针和分针每动一下，都会走过1小格，走过了<code>6&amp;deg;</code>，而时针动一下，则走过了一大格，<code>5*6&amp;deg;=30&amp;deg;</code>；因此，秒针和分针移动的基值是6&deg;，时针是30&deg;；</li>
+<li>另外在分针走动的时候，时针也不是静止不动的，而是不甘寂寞的默默向前移动，也就是说当分针动一下，走了6&deg;时，时针实际上也挪动了<code>1 / 60 * 30&amp;deg;</code>。所以，计算时针角度时不要忽略了分针对其的影响。（虽然秒针对分针也有着同样的影响，但几乎看不出来，所以，通常我们会将其忽略）</li>
+</ol>
+<p>三、js获取时间</p>
+<ul>
+<li>获得当前时间，<code>var date = new Date()</code>,获得当前时间，以毫秒数表示。</li>
+<li><code>getFullYear()</code>,4位年份</li>
+<li><code>getMonth()</code>,从0-11，分别表示1-12月</li>
+<li><code>getDate()</code>,月份中的天数</li>
+<li><code>getDay()</code>,从0-6，分别表示星期日-星期六</li>
+<li><code>getHours()</code>,0-23</li>
+<li><code>getMinutes()</code>,0-59</li>
+<li><code>getSecond()</code>,0-59</li>
+</ul>
+<p>代码如下：</p>
+<p><a href="http://t.cn/RUbL4rP" target="_blank" rel="external">http://t.cn/RUbL4rP</a></p>
+<div class="cnblogs_Highlighter"><br><pre class="brush:csharp;gutter:true;">&lt;!DOCTYPE html&gt;<br>&lt;html lang=”zh-cn”&gt;<br>&lt;head&gt;<br>&lt;title&gt;时钟效果的制作&lt;/title&gt;<br>&lt;meta charset=”utf-8”/&gt;<br>&lt;meta name=”keywords” content=”” /&gt;<br>&lt;meta name=”description” content=”” /&gt;<br>&lt;script type=”text/javascript” src=”jquery.js”&gt;&lt;/script&gt;<br>&lt;style type=”text/css”&gt;<br>body {<br>font-family: ‘Microsoft Yahei’;<br>}<br>ol,ul {<br>margin: 0;<br>padding: 0;<br>list-style: none;<br>}<br>h1 {<br>margin-top: 40px;<br>text-align: center;<br>color: #333;<br>}<br><br>/<em>表盘</em>/<br>.clock {<br>position: relative;<br>width: 200px;<br>height: 200px;<br>border-radius: 100%;<br>background-color: #000;<br>margin: 50px auto;<br>}<br>.pointer li.circle {<br>position: absolute;<br>top: 50%;<br>left: 50%;<br>transform-origin: left center; /<em>基点设置在最左边中间，保证绕着圆心旋转</em>/<br>background: #fff;<br>width: 10px;<br>height: 10px;<br>border-radius: 100%;<br>margin-top: -5px;<br>margin-left: -5px;<br>}<br><br>/<em>刻度</em>/<br>.line-hour li,<br>.line-min li {<br>position: absolute;<br>left: 50%;<br>top: 50%;<br>transform-origin: 0 0;<br>background-color: #fff;<br>}<br>.line-hour li {<br>width: 10px;<br>height: 2px;<br>}<br>.line-min li {<br>width: 5px;<br>height: 2px;<br>}<br><br>/<em>数字</em>/<br>.number {<br>position: absolute;<br>height: 150px;<br>width: 150px;<br>left: 50%;<br>top: 50%;<br>transform: translate(-50%, -50%); /<em>保证数字居中</em>/<br>font-size: 15px;<br>color: #fff;<br>}<br>.number li {<br>position: absolute;<br>transform: translate(-50%, -50%);<br>}<br><br>/<em>指针</em>/<br>.pointer li {<br>position: absolute;<br>top: 50%;<br>left: 50%;<br>transform-origin: left center; /<em>基点设置在最左边中间，保证绕着圆心旋转</em>/<br>background: #fff;<br>}<br>.pointer li.hour {<br>width: 45px;<br>height: 3px;<br>margin-top: -1px;<br>}<br>.pointer li.min {<br>width: 60px;<br>height: 2px;<br>margin-top: -1px;<br>}<br>.pointer li.sec {<br>width: 90px;<br>height: 1px;<br>margin-top: -1px;<br>background-color: red;<br>}<br>&lt;/style&gt;<br>&lt;/head&gt;<br>&lt;body&gt;<br><br>&lt;h1&gt;CSS 时钟效果演示&lt;/h1&gt;<br><br>&lt;div class=”clock”&gt;<br>&lt;ul class=”line-min”&gt;&lt;/ul&gt;<br>&lt;ul class=”line-hour”&gt;&lt;/ul&gt;<br>&lt;ol class=”number”&gt;&lt;/ol&gt;<br>&lt;ul class=”pointer”&gt;<br>&lt;li class=”hour”&gt;&lt;/li&gt;<br>&lt;li class=”min”&gt;&lt;/li&gt;<br>&lt;li class=”sec”&gt;&lt;/li&gt;<br>&lt;li class=”circle”&gt;&lt;/li&gt;<br>&lt;/ul&gt;<br>&lt;/div&gt;<br><br>&lt;script type=”text/javascript”&gt;<br>$(document).ready(function() {<br>function init(){<br>drawLines($(‘.line-min’), 60, 85);<br>drawLines($(‘.line-hour’), 12, 80);<br>drawNumbers($(‘.number’));<br>move();<br>}<br>init();<br><br>/<em>
+</em> 绘制钟表刻度线<br><em> @param wrap 刻度线的父容器
+</em> @param total 刻度线的总个数<br><em> @param translateX 刻度线在x轴方向的偏移量
+</em>/<br><br>function drawLines(wrap,total,translateX){<br>var gap = 360/total;<br>var strHtml =’’;<br>for (var i = 0; i &lt; total; i++) {<br>strHtml += ‘&lt;li style=”transform:rotate(‘+ (i<em>gap) + ‘deg) translate(‘ + translateX + ‘px,-50%)”&gt;&lt;/li&gt;’;<br>};<br>wrap.html(strHtml);<br>}<br><br>/</em><br><em> 绘制时钟数字
+</em> @param wrap 数字的父容器,仿照径向菜单原理<a href="http://www.cnblogs.com/wuxiaobin/p/4644806.html" target="_blank" rel="external">http://www.cnblogs.com/wuxiaobin/p/4644806.html</a><br><em> 由于旋转是从水平x轴开始旋转的，所以需要-90
+</em>/<br>function drawNumbers(wrap){<br>var radius = wrap.width() / 2;<br><br>var strHtml = ‘’;<br>for(var i=1; i&lt;=12; i++){<br>var myAngle = (i-3)/6 <em> Math.PI; //原公式 角度=&gt;弧度 (i</em>30-90)<em>(Math.PI/180) =&gt; (i-3)/6 </em> Math.PI;<br><br>var myX = radius + radius<em>Math.cos(myAngle), // x=r+rcos(&theta;)<br>myY = radius + radius</em>Math.sin(myAngle); // y=r+rsin(&theta;)<br><br>strHtml += ‘&lt;li style=”left:’ + myX + ‘px; top:’+ myY +’px”&gt;’ + i + ‘&lt;/li&gt;’;<br>}<br>wrap.html(strHtml);<br>}<br><br>/<em>
+</em> 钟表走动，转动秒针、分针、时针<br><em>/<br>function move(){<br>var domHour = $(“.hour”),<br>domMin = $(“.min”),<br>domSec = $(“.sec”);<br><br>setInterval(function(){<br>var now = new Date(),<br>hour = now.getHours(),<br>min = now.getMinutes(),<br>sec = now.getSeconds();<br><br>var secAngle = sec</em>6 - 90, // s<em>6-90<br>minAngle = min</em>6 + sec<em>0.1 - 90, // m</em>6+s<em>0.1-90<br>hourAngle = hour</em>30 + min<em>0.5 - 90; // h</em>30+m*0.5 - 90<br><br>domSec.css(‘transform’, ‘rotate(‘ + secAngle + ‘deg)’);<br>domMin.css(‘transform’, ‘rotate(‘ + minAngle + ‘deg)’);<br>domHour.css(‘transform’, ‘rotate(‘ + hourAngle + ‘deg)’);<br><br>document.title = hour + ‘:’ + min + ‘:’ + sec;<br><br>},1000);<br><br>}<br>})<br>&lt;/script&gt;<br>&lt;/body&gt;<br>&lt;/html&gt;<br></pre><br></div>
+
+<p>&nbsp;</p>
+<p>最终效果：</p>
+<p><img src="http://images0.cnblogs.com/blog2015/720690/201507/151802179853485.png" alt=""></p>
+</div><div class="article-meta" style="max-width:800px"></div><div class="article-comment" style="max-width:800px"><div class="ds-thread" id="ds-thread" data-thread-key="cj7ju58o1000234p2yof3equl" data-title="css3制作时钟" data-url="http://yoursite.com/2015/07/15/css3制作时钟/" site-name="ueibo"></div><script>var siteName = document.getElementById('ds-thread').getAttribute('site-name');
+var duoshuoQuery = {short_name: siteName};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();</script></div><ul class="navication"><li class="home"><a href="/"><i class="icon icon-home"></i></a></li><li><a href="/2015/07/14/mysql-如何在访问某张数据表按照某个字段分类输出/"><i class="icon icon-arror-left"></i></a></li><li><a href="/2015/07/20/swiper-制作活灵活现的微场景、微海报-一/"><i class="icon icon-arror-right"></i></a></li></ul><div class="page-footer"><div class="top"><ul class="social"><li><a href="https://github.com/xiaobinwu" title="Github" target="_blank"><i class="icon icon-github"></i></a></li><li><a href="http://weibo.com/u/2379094031" title="Weibo" target="_blank"><i class="icon icon-weibo"></i></a></li><li><a href="Mailto:739288994@qq.com" title="Email" target="_blank"><i class="icon icon-email"></i></a></li></ul><div class="site"><span>本站总访问量</span><span id="busuanzi_value_site_pv"></span><span>次，访客数</span><span id="busuanzi_value_site_uv"></span><span>人次</span></div></div><div class="bottom"><p class="copyright">© 2017 前端穷屌丝，爱码人士<br><small>POWER BY <a href="https://hexo.io" target="_blank">HEXO</a></small></p></div></div><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script>var wrap = document.getElementById('wrap');
+window.onload = function () {
+  wrap.className += ' done';
+}</script></body></html>
